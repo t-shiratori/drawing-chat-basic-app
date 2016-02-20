@@ -1,0 +1,140 @@
+#!/usr/bin/env node
+
+/**
+ * Module dependencies.
+ */
+
+var app = require('../app');
+var debug = require('debug')('express-socketio:server');
+var http = require('http');
+
+/**
+ * Get port from environment and store in Express.
+ */
+
+var port = normalizePort(process.env.PORT || '3000');
+app.set('port', port);
+
+/**
+ * Create HTTP server.
+ */
+
+var server = http.createServer(app);
+
+
+
+/**
+ * ADDED!! Require Socket.IO
+ */
+var io = require('socket.io')(server);
+var roomName = 'room001';
+var clients = {};
+
+/**
+ * ADDED!! Socket.IO Connection.
+ */
+io.on('connection', function (socket) {
+  console.log('connection');
+
+  socket.join(roomName);
+
+  //console.log(socket);
+  //console.log(sockets.adapter.rooms);
+  //console.log(io.sockets.adapter.rooms[roomName]);
+  //console.log(sockets.adapter.rooms[roomName].length);
+
+  //io.to(socket.id).emit('init',socket.id);
+
+  io.to(roomName).emit('chatInfoUpdate',io.sockets.adapter.rooms[roomName]);
+
+  socket.on('updateData', function(clientData){
+    var socketid = socket.id;
+    clients[socketid] = clientData;
+    io.to(roomName).emit('setClientData',clients);
+  });
+
+  socket.on('allClearCanvas', function(){
+    clients = {};//クライアントデータを初期化
+    io.to(roomName).emit('clearCanvas');
+    //console.log(clients);
+  });
+
+  socket.on('disconnect', function (socket) {
+    clients = {};//切断したclientが発生したらclientsオブジェクトを初期化、不要なデータが残ってしまうので。
+    io.to(roomName).emit('chatInfoUpdate',io.sockets.adapter.rooms[roomName]);
+    //console.log('disconnect socketid: ',socket);
+    //console.log(io.sockets.adapter.rooms[roomName]);
+  });
+
+
+});
+
+
+
+/**
+ * Listen on provided port, on all network interfaces.
+ */
+
+server.listen(port);
+server.on('error', onError);
+server.on('listening', onListening);
+
+/**
+ * Normalize a port into a number, string, or false.
+ */
+
+function normalizePort(val) {
+  var port = parseInt(val, 10);
+
+  if (isNaN(port)) {
+    // named pipe
+    return val;
+  }
+
+  if (port >= 0) {
+    // port number
+    return port;
+  }
+
+  return false;
+}
+
+/**
+ * Event listener for HTTP server "error" event.
+ */
+
+function onError(error) {
+  if (error.syscall !== 'listen') {
+    throw error;
+  }
+
+  var bind = typeof port === 'string'
+    ? 'Pipe ' + port
+    : 'Port ' + port;
+
+  // handle specific listen errors with friendly messages
+  switch (error.code) {
+    case 'EACCES':
+      console.error(bind + ' requires elevated privileges');
+      process.exit(1);
+      break;
+    case 'EADDRINUSE':
+      console.error(bind + ' is already in use');
+      process.exit(1);
+      break;
+    default:
+      throw error;
+  }
+}
+
+/**
+ * Event listener for HTTP server "listening" event.
+ */
+
+function onListening() {
+  var addr = server.address();
+  var bind = typeof addr === 'string'
+    ? 'pipe ' + addr
+    : 'port ' + addr.port;
+  debug('Listening on ' + bind);
+}
