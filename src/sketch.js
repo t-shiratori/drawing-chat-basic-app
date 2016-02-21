@@ -393,10 +393,13 @@ let colorPicker__selectHueSkech = function(p){
     let hue = getHue(r,g,b);
     hue = p.map(hue,0,360,0,100);
 
-    //
+    //色相を更新
     pickerHue = hue;
+
+    //彩度明度ピッカーを再描画
     colorPickerSelectSatBriSketch_p5.draw();
 
+    //ドローイングの色を更新
     myColor[0] = r;
     myColor[1] = g;
     myColor[2] = b;
