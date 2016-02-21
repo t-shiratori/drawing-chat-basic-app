@@ -30,7 +30,7 @@ gulp.task('browserify',function (){
 	})
   .pipe(source(output_file_name_browserify))//ここでvinylに変換される
   .pipe(buffer()) //uglify()するときにこれをやらないとエラーになる
-  .pipe(gulpPlugins.uglify())
+  //.pipe(gulpPlugins.uglify())
 	.pipe(gulp.dest(dest_url_browserify))
   .pipe(browserSync.stream());//タスクの中で変更が発生したファイルのみを読み込み、画面に再描画する
 });

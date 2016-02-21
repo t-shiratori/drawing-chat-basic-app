@@ -1,1 +1,406 @@
-!function e(r,o,t){function a(n,c){if(!o[n]){if(!r[n]){var d="function"==typeof require&&require;if(!c&&d)return d(n,!0);if(i)return i(n,!0);var l=new Error("Cannot find module '"+n+"'");throw l.code="MODULE_NOT_FOUND",l}var s=o[n]={exports:{}};r[n][0].call(s.exports,function(e){var o=r[n][1][e];return a(o?o:e)},s,s.exports,e,r,o,t)}return o[n].exports}for(var i="function"==typeof require&&require,n=0;n<t.length;n++)a(t[n]);return a}({1:[function(e,r,o){"use strict";var t=void 0,a=void 0,i=void 0,n=void 0,c=void 0,d=void 0,l=!1,s=[],u=[],v={},p={x:-9999,y:-9999},f=void 0,h=void 0,m=void 0,g=void 0,x=void 0,w=void 0,S=void 0,C=void 0,P=void 0,k=void 0,b=void 0,y=360,B=function(e){function r(r){e.strokeCap(e.ROUND),e.noFill(),e.push();var o=e.color(r.path.clr[0],r.path.clr[1],r.path.clr[2],r.path.clr[3]);e.stroke(o),e.strokeWeight(r.path.bdW),e.beginShape();for(var t=0;t<r.path.points.length;t++){var a=r.path.points[t];e.vertex(a.x,a.y)}if(e.endShape(),e.pop(),r.pathArr.length>0)for(var t=0;t<r.pathArr.length;t++){var i=r.pathArr[t];e.push();var n=e.color(i.clr[0],i.clr[1],i.clr[2],i.clr[3]);e.stroke(n),e.strokeWeight(i.bdW),e.beginShape();for(var c=0;c<i.points.length;c++){var a=i.points[c];e.vertex(a.x,a.y)}e.endShape(),e.pop()}}function o(){t.emit("allClearCanvas")}var a=void 0;e.setup=function(){e.frameRate(40),a=e.createCanvas(e.windowWidth,e.windowHeight),a.parent("mainCanvasWrapper"),a.id("mainCanvas"),e.background(255),f=e.createDiv(""),f.id("panel"),h=e.createDiv(""),h.id("panelInnerBox"),f.child(h),g=e.createP("number of people"),g.id("ttlChatNum"),h.child("ttlChatNum"),x=e.createP(""),x.id("chatNum"),h.child(x),m=e.createButton("clear canvas"),m.id("clearBtn"),m["class"]("btn btn-default"),m.mouseClicked(o),h.child(m),C=e.createP("alpha"),C.id("ttlSliderAlpha"),h.child(C),k=e.createSlider(0,255,100),k.id("sliderAlpha"),h.child(k),P=e.createP("border width"),P.id("ttlSliderBorderW"),h.child(P),b=e.createSlider(1,40,1),b.id("sliderBorderW"),h.child(b),c=[0,0,0,k.value()],n={pathArr:u,path:v,drag:l},t=io(),t.on("setClientData",function(r){i=r,e.redraw()}),t.on("chatInfoUpdate",function(e){var r=document.getElementById("chatNum");r.innerHTML=e.length}),t.on("clearCanvas",function(){v={},u=[],n.pathArr=u,n.path=v,e.clear()}),t.on("disconnect",function(){t.emit("disconnect")}),e.noLoop()},e.draw=function(){e.clear();for(var o in i)i.hasOwnProperty(o)&&r(i[o]);e.noLoop()},e.mousePressed=function(e){var r=e.srcElement||e.target;r==a.canvas&&(l=!0,s=[])},e.mouseDragged=function(r){var o=r.srcElement||r.target;if(o==a.canvas){e.cursor(e.CROSS),p.x=r.offsetX,p.y=r.offsetY;var i={x:p.x,y:p.y};s.push(i),c[3]=k.value(),d=b.value();var f=[c[0],c[1],c[2],c[3]];v={clr:f,bdW:d,points:s},n={pathArr:u,path:v,drag:l},t.emit("updateData",n)}},e.mouseReleased=function(e){var r=e.srcElement||e.target;r==a.canvas&&(l=!1,n.drag=l,u.push(v))},e.windowResized=function(){e.resizeCanvas(e.windowWidth,e.windowHeight)}};new p5(B);var D=function(e){function r(r){e.cursor(e.CROSS);var o=r.offsetX,i=r.offsetY,n=4*a*t*i+4*o*t,d=e.pixels[n],l=e.pixels[n+1],s=e.pixels[n+2];c[0]=d,c[1]=l,c[2]=s}function o(){for(var r=0;100>r;r++)for(var o=0;100>o;o++)e.stroke(y,100-o,r),e.point(r,o)}var t=void 0,a=100,i=100,n=void 0;e.setup=function(){e.background(0),e.colorMode(e.HSB,a),t=e.pixelDensity(),w=e.createDiv(""),w.id("colorPicker__selectSatBri"),h.child(w),n=e.createCanvas(a,i),n.mousePressed(r),n.parent("colorPicker__selectSatBri"),e.noLoop()},e.draw=function(){e.colorMode(e.HSB,100),o(),e.loadPixels()},e.mousePressed=function(e){}};a=new p5(D);var W=function(e){function r(r){e.cursor(e.CROSS);var n=r.offsetX,d=r.offsetY,l=4*i*t*d+4*n*t,s=e.pixels[l],u=e.pixels[l+1],v=e.pixels[l+2],p=o(s,u,v);p=e.map(p,0,360,0,100),y=p,a.draw(),c[0]=s,c[1]=u,c[2]=v}function o(r,o,t){var a=void 0,i=e.max(r,o,t),n=e.min(r,o,t);return i==r?a=(o-t)/(i-n)*60:i==o?a=(t-r)/(i-n)*60+120:i==t?a=(r-o)/(i-n)*60+240:r==o&&o==t&&(a=0),0>a&&(a+=360),a=e.floor(a)}var t=void 0,i=100,n=15,d=void 0;e.setup=function(){e.background(0),e.colorMode(e.HSB,i),t=e.pixelDensity(),S=e.createDiv(""),S.id("colorPicker__selectHue"),h.child(S),d=e.createCanvas(i,n),d.mousePressed(r),d.parent("colorPicker__selectHue"),e.noLoop()},e.draw=function(){e.colorMode(e.HSB,100);for(var r=0;i>r;r++)for(var o=0;n>o;o++)e.stroke(r,100,100),e.point(r,o);e.loadPixels()},e.mousePressed=function(e){}};new p5(W)},{}]},{},[1]);
+(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+'use strict';
+
+//socket io
+
+var socket = undefined;
+
+//p5
+var colorPickerSelectSatBriSketch_p5 = undefined;
+
+//scketch
+var myData = undefined;
+var myID = undefined;
+var myColor = undefined;
+var myBorderW = undefined;
+var users = {}; //チャットルームメンバーごとのデータ管理テーブル
+var lines = []; //描画する全てのストローク保持用
+
+//dom
+var panel = undefined;
+var panelInnerBox = undefined;
+var selectBox = undefined;
+var clearBtn = undefined;
+var ttl = undefined;
+var chatInfo = undefined;
+var ttlChatNum = undefined;
+var chatNum = undefined;
+var colorPicker__selectSatBri = undefined;
+var colorPicker__selectHue = undefined;
+var ttlSliderAlpha = undefined;
+var ttlSliderBorderW = undefined;
+var sliderAlpha = undefined;
+var sliderBorderW = undefined;
+
+//色相
+var pickerHue = 360;
+
+/*--
+
+  canvas main
+
+------------------------------------*/
+var scketch = function scketch(p) {
+
+  var thisRenderer2dObj = undefined;
+
+  p.setup = function () {
+    p.frameRate(40);
+    thisRenderer2dObj = p.createCanvas(p.windowWidth, p.windowHeight);
+    thisRenderer2dObj.parent('mainCanvasWrapper');
+    thisRenderer2dObj.id('mainCanvas');
+    p.background(255);
+    //p.color() で送るとサーバーから受け取るときに型がp5から普通のobjectに変わってしまうのでだめ
+    //myColor = p.color(p.floor(p.random(255)),p.floor(p.random(255)),p.floor(p.random(255)),p.floor(p.random(255)));
+
+    /*
+      コンパネ作成
+    --------------------------------------*/
+    panel = p.createDiv('');
+    panel.id('panel');
+
+    panelInnerBox = p.createDiv('');
+    panelInnerBox.id('panelInnerBox');
+    panel.child(panelInnerBox);
+
+    ttlChatNum = p.createP('number of people');
+    ttlChatNum.id('ttlChatNum');
+    panelInnerBox.child('ttlChatNum');
+
+    chatNum = p.createP('');
+    chatNum.id('chatNum');
+    panelInnerBox.child(chatNum);
+
+    clearBtn = p.createButton('clear canvas');
+    clearBtn.id('clearBtn');
+    clearBtn.class('btn btn-default');
+    clearBtn.mouseClicked(clearCanvas);
+    panelInnerBox.child(clearBtn);
+
+    // chatInfo = p.createDiv('');
+    // chatInfo.id('chatInfo');
+    // panelInnerBox.child(chatInfo);
+
+    ttlSliderAlpha = p.createP('alpha');
+    ttlSliderAlpha.id('ttlSliderAlpha');
+    panelInnerBox.child(ttlSliderAlpha);
+
+    sliderAlpha = p.createSlider(0, 255, 100);
+    sliderAlpha.id('sliderAlpha');
+    panelInnerBox.child(sliderAlpha);
+
+    ttlSliderBorderW = p.createP('border width');
+    ttlSliderBorderW.id('ttlSliderBorderW');
+    panelInnerBox.child(ttlSliderBorderW);
+
+    sliderBorderW = p.createSlider(1, 40, 1);
+    sliderBorderW.id('sliderBorderW');
+    panelInnerBox.child(sliderBorderW);
+
+    //色初期値
+    myColor = [0, 0, 0, sliderAlpha.value()];
+
+    /*--
+      socket io
+    ------------------------------------*/
+    socket = io();
+
+    //サーバーから自分のidを受け取る
+    socket.on('setYourId', function (yourId) {
+      myID = yourId;
+    });
+
+    //サーバーから、チャットルームの情報を受け取る
+    socket.on('chatInfoUpdate', function (chatData) {
+      //チャットの人数表示
+      var chatNum = document.getElementById('chatNum');
+      chatNum.innerHTML = chatData.length;
+      //チャットルームメンバーのぼとのデータ管理テーブルをセット
+      users = {};
+      for (var key in chatData.sockets) {
+        if (chatData.sockets.hasOwnProperty(key)) {
+          users[key] = [];
+        }
+      }
+    });
+
+    //サーバーから、更新されたクライアントデータを受け取る
+    //新規ストロークの追加
+    socket.on('addToLines', function (id) {
+      users[id] = [];
+      lines.push(users[id]);
+    });
+
+    //サーバーから、更新されたユーザーのデータを受け取る
+    //ストローク情報の更新
+    socket.on('setClientData', function (userData) {
+      users[userData.id].push(userData);
+      p.redraw();
+    });
+
+    //全員のキャンバスを初期化
+    socket.on('clearCanvas', function () {
+      lines = [];
+      p.clear();
+    });
+
+    //ウィンドウを閉じたらサーバーに通信切断を通知する
+    socket.on('disconnect', function () {
+      socket.emit('disconnect');
+    });
+
+    p.noLoop();
+  }; //end setup
+
+  p.draw = function () {
+    p.clear();
+    drawPath();
+    p.noLoop();
+  }; // end draw
+
+  p.mousePressed = function (e) {
+    var t = e.srcElement || e.target; //for ie
+    if (t == thisRenderer2dObj.canvas) {
+      socket.emit('pushUserStroke');
+    }
+  };
+
+  p.mouseDragged = function (e) {
+    var t = e.srcElement || e.target; //for ie
+
+    //canvasでドラッグした時だけ実行したい。スライダー操作の時などに反応しないようにcanvasかどうか判定して条件分岐。
+    if (t == thisRenderer2dObj.canvas) {
+
+      p.cursor(p.CROSS);
+
+      //マウス座標
+      var point = { x: e.offsetX, y: e.offsetY };
+
+      //アルファ値
+      myColor[3] = sliderAlpha.value();
+
+      //ボーダーの太さ
+      myBorderW = sliderBorderW.value();
+
+      //色
+      var tempCol = [myColor[0], myColor[1], myColor[2], myColor[3]];
+
+      //送信データをセット
+      myData = {
+        clr: tempCol,
+        bdW: myBorderW,
+        p: point
+      };
+
+      //サーバーに送信
+      socket.emit('updateUserData', myData);
+    };
+  };
+
+  p.mouseReleased = function (e) {};
+
+  p.windowResized = function () {
+    p.resizeCanvas(p.windowWidth, p.windowHeight);
+  };
+
+  /*----------------------
+   カスタムブラシ
+   -----------------------*/
+  function drawPath() {
+    p.strokeCap(p.ROUND);
+    //p.strokeCap(p.SQUARE);
+    //p.strokeCap(p.PROJECT);
+    p.noFill();
+    for (var i = 0; i < lines.length; i++) {
+      var line = lines[i];
+      p.push();
+      p.noFill();
+      p.beginShape();
+      for (var j = 0; j < line.length; j++) {
+        var c = p.color(line[j].clr[0], line[j].clr[1], line[j].clr[2], line[j].clr[3]);
+        p.stroke(c);
+        p.strokeWeight(line[j].bdW);
+        p.vertex(line[j].p.x, line[j].p.y);
+      }
+      p.endShape();
+      p.pop();
+    }
+  }
+
+  function clearCanvas() {
+    socket.emit('allClearCanvas');
+  }
+};
+new p5(scketch);
+
+/*--
+
+  canvas colorPicker saturation brightness
+
+------------------------------------*/
+var colorPicker__selectSatBriSketch = function colorPicker__selectSatBriSketch(p) {
+
+  var pd = undefined;
+  var cvsW = 100;
+  var cvsH = 100;
+  var thisRenderer2dObj = undefined;
+
+  p.setup = function () {
+    p.background(0);
+    p.colorMode(p.HSB, cvsW);
+    pd = p.pixelDensity();
+
+    //dom作成
+    colorPicker__selectSatBri = p.createDiv('');
+    colorPicker__selectSatBri.id('colorPicker__selectSatBri');
+    panelInnerBox.child(colorPicker__selectSatBri);
+
+    //canvas作成
+    thisRenderer2dObj = p.createCanvas(cvsW, cvsH);
+    thisRenderer2dObj.mousePressed(changeColor); //こうするとthisRenderer2dObjがクリックされた時だけ呼び出されるのでmainCanvasに影響しない。
+    thisRenderer2dObj.parent("colorPicker__selectSatBri");
+    p.noLoop();
+  };
+
+  p.draw = function () {
+    p.colorMode(p.HSB, 100);
+    drawColor();
+    p.loadPixels();
+  };
+
+  p.mousePressed = function (e) {
+    //ここはmainCanvasもクリックを検知してしまうので注意
+  };
+
+  function changeColor(e) {
+    /*
+    noLoopしてるとmouseXなどが全部0で返ってくる仕様らしい。なのでeで普通にclientXのほうを使う。
+    https://github.com/processing/p5.js/issues/1205
+    */
+    p.cursor(p.CROSS);
+    var mx = e.offsetX; //http://phpjavascriptroom.com/?t=js&p=event_object
+    var my = e.offsetY;
+
+    //ピクセルの色取得
+    var pos = 4 * cvsW * pd * my + 4 * mx * pd;
+    var r = p.pixels[pos]; //画像の場合はp.getでいけるがcanvasの塗りの場合はp.pixels[]でやる必要がある
+    var g = p.pixels[pos + 1];
+    var b = p.pixels[pos + 2];
+
+    myColor[0] = r;
+    myColor[1] = g;
+    myColor[2] = b;
+  }
+
+  function drawColor() {
+    for (var i = 0; i < 100; i++) {
+      for (var j = 0; j < 100; j++) {
+        p.stroke(pickerHue, 100 - j, i);
+        p.point(i, j);
+      }
+    }
+  }
+};
+colorPickerSelectSatBriSketch_p5 = new p5(colorPicker__selectSatBriSketch);
+
+/*--
+
+  canvas colorPicker hue
+
+------------------------------------*/
+var colorPicker__selectHueSkech = function colorPicker__selectHueSkech(p) {
+
+  var pd = undefined;
+  var cvsW = 100;
+  var cvsH = 15;
+  var thisRenderer2dObj = undefined;
+
+  p.setup = function () {
+    p.background(0);
+    p.colorMode(p.HSB, cvsW);
+    pd = p.pixelDensity();
+
+    //dom作成
+    colorPicker__selectHue = p.createDiv('');
+    colorPicker__selectHue.id('colorPicker__selectHue');
+    panelInnerBox.child(colorPicker__selectHue);
+
+    //canvas作成
+    thisRenderer2dObj = p.createCanvas(cvsW, cvsH);
+    thisRenderer2dObj.mousePressed(changeColor); //こうするとthisRenderer2dObjがクリックされた時だけ呼び出されるのでmainCanvasに影響しない。
+    thisRenderer2dObj.parent("colorPicker__selectHue");
+
+    p.noLoop();
+  };
+
+  p.draw = function () {
+
+    p.colorMode(p.HSB, 100);
+    for (var k = 0; k < cvsW; k++) {
+      for (var h = 0; h < cvsH; h++) {
+        p.stroke(k, 100, 100);
+        p.point(k, h);
+      }
+    }
+    p.loadPixels();
+  };
+
+  p.mousePressed = function (e) {
+    //ここはmainCanvasもクリックを検知してしまうので注意
+  };
+
+  function changeColor(e) {
+    /*
+    最新のp5だとnoLoopにした場合mouseXなどが全部0で返ってくるらしい。バグかは不明。なのでeで普通にclientXのほうを使う。
+    https://github.com/processing/p5.js/issues/1205
+    */
+    p.cursor(p.CROSS);
+    var mx = e.offsetX; //http://phpjavascriptroom.com/?t=js&p=event_object
+    var my = e.offsetY;
+
+    //ピクセルの色取得
+    var pos = 4 * cvsW * pd * my + 4 * mx * pd;
+    var r = p.pixels[pos]; //画像の場合はp.getでいけるがcanvasの塗りの場合はp.pixels[]でやる必要がある
+    var g = p.pixels[pos + 1];
+    var b = p.pixels[pos + 2];
+
+    //RGBからHSBに変換 hueのみ
+    var hue = getHue(r, g, b);
+    hue = p.map(hue, 0, 360, 0, 100);
+
+    //
+    pickerHue = hue;
+    colorPickerSelectSatBriSketch_p5.draw();
+
+    myColor[0] = r;
+    myColor[1] = g;
+    myColor[2] = b;
+  }
+
+  function getHue(r, g, b) {
+    var hue = undefined;
+    var max = p.max(r, g, b);
+    var min = p.min(r, g, b);
+
+    if (max == r) {
+      hue = (g - b) / (max - min) * 60;
+    } else if (max == g) {
+      hue = (b - r) / (max - min) * 60 + 120;
+    } else if (max == b) {
+      hue = (r - g) / (max - min) * 60 + 240;
+    } else if (r == g && g == b) {
+      hue = 0;
+    }
+
+    if (hue < 0) {
+      hue += 360;
+    }
+
+    hue = p.floor(hue);
+
+    return hue;
+  }
+};
+new p5(colorPicker__selectHueSkech);
+
+},{}]},{},[1]);

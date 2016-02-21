@@ -34,7 +34,7 @@ var clients = {};
  * ADDED!! Socket.IO Connection.
  */
 io.on('connection', function (socket) {
-  console.log('connection');
+  //console.log('connection');
 
   socket.join(roomName);
 
@@ -43,24 +43,25 @@ io.on('connection', function (socket) {
   //console.log(io.sockets.adapter.rooms[roomName]);
   //console.log(sockets.adapter.rooms[roomName].length);
 
-  //io.to(socket.id).emit('init',socket.id);
-
+  io.to(socket.id).emit('setYourId',socket.id);
   io.to(roomName).emit('chatInfoUpdate',io.sockets.adapter.rooms[roomName]);
 
-  socket.on('updateData', function(clientData){
+  socket.on('updateUserData', function(userData){
     var socketid = socket.id;
-    clients[socketid] = clientData;
-    io.to(roomName).emit('setClientData',clients);
+    userData.id = socketid;
+    io.to(roomName).emit('setClientData',userData);
+  });
+
+  socket.on('pushUserStroke', function(){
+    var socketid = socket.id;
+    io.to(roomName).emit('addToLines',socketid);
   });
 
   socket.on('allClearCanvas', function(){
-    clients = {};//クライアントデータを初期化
     io.to(roomName).emit('clearCanvas');
-    //console.log(clients);
   });
 
   socket.on('disconnect', function (socket) {
-    clients = {};//切断したclientが発生したらclientsオブジェクトを初期化、不要なデータが残ってしまうので。
     io.to(roomName).emit('chatInfoUpdate',io.sockets.adapter.rooms[roomName]);
     //console.log('disconnect socketid: ',socket);
     //console.log(io.sockets.adapter.rooms[roomName]);

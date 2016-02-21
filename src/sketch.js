@@ -7,18 +7,12 @@ let socket;
 let colorPickerSelectSatBriSketch_p5;
 
 //scketch
-let clientsObj;
 let myData;
+let myID;
 let myColor;
-let myAngle = 0;
-let myDiff = 0;
-let myPattern = 'path';
 let myBorderW;
-let myDragFlag = false;
-let myHistoryPoints = [];
-let myPathArr = [];
-let myPath = {};
-let myCurrentP = {x:-9999,y:-9999};
+let users = {};//チャットルームメンバーごとのデータ管理テーブル
+let lines = [];//描画する全てのストローク保持用
 
 //dom
 let panel;
@@ -36,7 +30,7 @@ let ttlSliderBorderW;
 let sliderAlpha;
 let sliderBorderW;
 
-//
+//色相
 let pickerHue = 360;
 
 
@@ -54,7 +48,6 @@ let scketch = function(p){
     thisRenderer2dObj = p.createCanvas(p.windowWidth, p.windowHeight);
     thisRenderer2dObj.parent('mainCanvasWrapper');
     thisRenderer2dObj.id('mainCanvas');
-    //p.blendMode(p.ADD);
     p.background(255);
     //p.color() で送るとサーバーから受け取るときに型がp5から普通のobjectに変わってしまうのでだめ
     //myColor = p.color(p.floor(p.random(255)),p.floor(p.random(255)),p.floor(p.random(255)),p.floor(p.random(255)));
@@ -103,36 +96,53 @@ let scketch = function(p){
     sliderBorderW.id('sliderBorderW');
     panelInnerBox.child(sliderBorderW);
 
+    //色初期値
     myColor = [0,0,0,sliderAlpha.value()];
 
-    myData = {
-      pathArr:myPathArr,
-      path:myPath,
-      drag: myDragFlag
-    };
+
+
 
     /*--
       socket io
     ------------------------------------*/
     socket = io();
 
-    //サーバーからクライアントデータを受け取る
-    socket.on('setClientData',function(clients){
-      clientsObj = clients;
+    //サーバーから自分のidを受け取る
+    socket.on('setYourId',function(yourId){
+      myID = yourId;
+    });
+
+    //サーバーから、チャットルームの情報を受け取る
+    socket.on('chatInfoUpdate',function(chatData){
+      //チャットの人数表示
+      let chatNum = document.getElementById('chatNum');
+      chatNum.innerHTML = chatData.length;
+      //チャットルームメンバーのぼとのデータ管理テーブルをセット
+      users = {};
+      for(let key in chatData.sockets) {
+        if(chatData.sockets.hasOwnProperty(key)) {
+          users[key] = [];
+        }
+      }
+    });
+
+    //サーバーから、更新されたクライアントデータを受け取る
+    //新規ストロークの追加
+    socket.on('addToLines',function(id){
+      users[id] = [];
+      lines.push(users[id]);
+    });
+
+    //サーバーから、更新されたユーザーのデータを受け取る
+    //ストローク情報の更新
+    socket.on('setClientData',function(userData){
+      users[userData.id].push(userData);
       p.redraw();
     });
 
-    //サーバーからチャット情報を受け取る
-    socket.on('chatInfoUpdate',function(chatData){
-      let chatNum = document.getElementById('chatNum');
-      chatNum.innerHTML = chatData.length;
-    });
-
+    //全員のキャンバスを初期化
     socket.on('clearCanvas',function(){
-      myPath = {};
-      myPathArr = [];
-      myData.pathArr = myPathArr;
-      myData.path = myPath;
+      lines = [];
       p.clear();
     });
 
@@ -147,32 +157,15 @@ let scketch = function(p){
 
 
   p.draw = function(){
-    //p.clear();
-    //p.background(0);
-    //p.background(255);
-    //p.fill(255,255,255,50);
-    //p.rect(0,0,p.windowWidth, p.windowHeight);
-
-
     p.clear();
-    for(let key in clientsObj) {
-      if(clientsObj.hasOwnProperty(key)) {
-        // if(clientsObj[key].drag){
-        //
-        // }
-        drawPath(clientsObj[key]);
-      }
-    }
-
+    drawPath();
     p.noLoop();
-
   }// end draw
 
   p.mousePressed = function(e){
     let t = e.srcElement || e.target;//for ie
     if(t == thisRenderer2dObj.canvas){
-      myDragFlag = true;
-      myHistoryPoints = [];
+      socket.emit('pushUserStroke');
     }
   }
 
@@ -184,12 +177,8 @@ let scketch = function(p){
 
       p.cursor(p.CROSS);
 
-      myCurrentP.x = e.offsetX;
-      myCurrentP.y = e.offsetY;
-
-      //座標ヒストリー
-      let point = {x:myCurrentP.x,y:myCurrentP.y};
-      myHistoryPoints.push(point);
+      //マウス座標
+      let point = {x:e.offsetX, y:e.offsetY};
 
       //アルファ値
       myColor[3] = sliderAlpha.value();
@@ -197,36 +186,24 @@ let scketch = function(p){
       //ボーダーの太さ
       myBorderW = sliderBorderW.value();
 
-      //今回のストロークの色
+      //色
       let tempCol = [myColor[0],myColor[1],myColor[2],myColor[3]];
 
-      //今回のドラッグのパスデータ
-      myPath = {clr:tempCol, bdW: myBorderW, points: myHistoryPoints};
-
-      //データをセット
+      //送信データをセット
       myData = {
-        pathArr:myPathArr,
-        path:myPath,
-        drag: myDragFlag
+        clr:tempCol,
+        bdW: myBorderW,
+        p: point
       };
 
       //サーバーに送信
-      socket.emit('updateData',myData);
+      socket.emit('updateUserData',myData);
 
     };
 
   };
 
-  p.mouseReleased = function(e){
-    let t = e.srcElement || e.target;//for ie
-    if(t == thisRenderer2dObj.canvas){
-      myDragFlag = false;
-      myData.drag = myDragFlag;
-      //今回のpathをpathのストックに追加
-      myPathArr.push(myPath);
-
-    }
-  }
+  p.mouseReleased = function(e){}
 
   p.windowResized = function() {
     p.resizeCanvas(p.windowWidth, p.windowHeight);
@@ -238,49 +215,31 @@ let scketch = function(p){
   カスタムブラシ
 
   -----------------------*/
-  function drawPath(cltObj){
+  function drawPath(){
     p.strokeCap(p.ROUND);
     //p.strokeCap(p.SQUARE);
     //p.strokeCap(p.PROJECT);
     p.noFill();
-    p.push();
-      let c = p.color(cltObj.path.clr[0],cltObj.path.clr[1],cltObj.path.clr[2],cltObj.path.clr[3]);
-      p.stroke(c);
-      p.strokeWeight(cltObj.path.bdW);
-      p.beginShape();
-      for(let i = 0; i<cltObj.path.points.length; i++){
-        let h = cltObj.path.points[i];
-        p.vertex(h.x,h.y);
-      }
-      p.endShape();
-    p.pop();
-
-    if(cltObj.pathArr.length > 0){
-      for(let i = 0; i<cltObj.pathArr.length; i++){
-        let thisPath = cltObj.pathArr[i];
-        p.push();
-          let c = p.color(thisPath.clr[0],thisPath.clr[1],thisPath.clr[2],thisPath.clr[3]);
-          p.stroke(c);
-          p.strokeWeight(thisPath.bdW);
-          p.beginShape();
-          for(let i = 0; i<thisPath.points.length; i++){
-            let h = thisPath.points[i];
-            p.vertex(h.x,h.y);
+    for(let i=0; i<lines.length; i++){
+      let line = lines[i];
+      p.push();
+        p.noFill();
+        p.beginShape();
+          for(let j = 0; j<line.length; j++){
+            let c = p.color(line[j].clr[0],line[j].clr[1],line[j].clr[2],line[j].clr[3]);
+            p.stroke(c);
+            p.strokeWeight(line[j].bdW);
+            p.vertex(line[j].p.x,line[j].p.y);
           }
-          p.endShape();
-        p.pop();
-      }
+        p.endShape();
+      p.pop();
     }
 
   }
 
-
   function clearCanvas(){
     socket.emit('allClearCanvas');
   }
-
-
-
 
 
 }
@@ -468,8 +427,6 @@ let colorPicker__selectHueSkech = function(p){
     return hue;
 
   }
-
-
 
 }
 new p5(colorPicker__selectHueSkech);
