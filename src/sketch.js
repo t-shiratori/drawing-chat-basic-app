@@ -130,13 +130,18 @@ let scketch = function(p){
     //新規ストロークの追加
     socket.on('addToLines',function(id){
       users[id] = [];
+      //これは空にしているのではなく新しい配列オブジェクトを作成している。
+      //これは参照渡しなのでlinesにpushしたusers[id]と同じアドレス参照になる。
+      //ただし新しいオブジェクトなので古いものとは違うアドレスになる。
+      //つまりsetClientDataのところでは最後に生成した配列オブジェクトのみ参照しているので、
+      //最新のオブジェクトだけ更新される
       lines.push(users[id]);
     });
 
     //サーバーから、更新されたユーザーのデータを受け取る
     //ストローク情報の更新
     socket.on('setClientData',function(userData){
-      users[userData.id].push(userData);
+      users[userData.id].push(userData);//addToLinesのコメントを参照
       p.redraw();
     });
 
