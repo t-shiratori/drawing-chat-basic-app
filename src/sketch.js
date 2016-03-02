@@ -72,7 +72,7 @@ let scketch = function(p){
 
     clearBtn = p.createButton('clear canvas');
     clearBtn.id('clearBtn');
-    clearBtn.class('btn btn-default');
+    clearBtn.class('mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent');
     clearBtn.mouseClicked(clearCanvas);
     panelInnerBox.child(clearBtn);
 
@@ -86,6 +86,7 @@ let scketch = function(p){
 
     sliderAlpha = p.createSlider(0,255,100);
     sliderAlpha.id('sliderAlpha');
+    sliderAlpha.class('mdl-slider mdl-js-slider');
     panelInnerBox.child(sliderAlpha);
 
     ttlSliderBorderW = p.createP('border width');
@@ -94,6 +95,7 @@ let scketch = function(p){
 
     sliderBorderW = p.createSlider(1,40,1);
     sliderBorderW.id('sliderBorderW');
+    sliderBorderW.class('mdl-slider mdl-js-slider');
     panelInnerBox.child(sliderBorderW);
 
     //色初期値

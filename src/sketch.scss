@@ -16,43 +16,59 @@ div,p{
   left: 0;
   width: 170px;
   height: 100%;
-  background: #666666;
+  background: #ddd;
 }
 #panelInnerBox{
   position: relative;
   top: 0;
   left: 0;
-  padding: 20px 10px;
-  input,select,button{
-    margin-bottom: 20px;
-  }
-  p{
-    margin-bottom: 10px;
-    color: #ddd;
-    letter-spacing: 0.05em;
-  }
+  padding: 20px 20px;
+  color: #333;
+  // input,select,button{
+  //   margin-bottom: 20px;
+  // }
+  // p{
+  //   margin-bottom: 10px;
+  //   color: #ddd;
+  //   letter-spacing: 0.05em;
+  // }
   #ttlChatNum{}
   #chatNum{
-    margin-bottom: 20px;
+    margin-bottom: 30px;
   }
-  #selectPattern{
-  }
+  // #selectPattern{
+  // }
   #clearBtn{
-    width: 10em;
+    margin-bottom: 30px;
   }
-  #ttlSliderAlpha{}
-  #sliderAlpha{
-    width: 100px;
-  }
-  #ttlSliderBorderW{}
-  #sliderBorderW{
-    width: 100px;
-  }
+  // #ttlSliderAlpha{}
+  // #sliderAlpha{
+  //   width: 100px;
+  // }
+  // #ttlSliderBorderW{}
+  // #sliderBorderW{
+  //   width: 100px;
+  // }
   #colorPicker__selectSatBri{
     margin-bottom: 5px;
     line-height: 0;
   }
   #colorPicker__selectHue{
     line-height: 0;
+  }
+  .mdl-button{
+    margin-bottom: 20px;
+    height: 26px;
+    line-height: 26px;
+    font-size: 12px;
+  }
+  .mdl-slider__container{
+    margin-bottom: 30px;
+    margin-left: -20px;
+    width: 140px;
+  }
+
+  .mdl-button--accent.mdl-button--accent.mdl-button--raised {
+    color: rgb(255,255,255);
   }
 }

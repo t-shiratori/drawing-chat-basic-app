@@ -16,29 +16,31 @@ div, p {
   left: 0;
   width: 170px;
   height: 100%;
-  background: #666666; }
+  background: #ddd; }
 
 #panelInnerBox {
   position: relative;
   top: 0;
   left: 0;
-  padding: 20px 10px; }
-  #panelInnerBox input, #panelInnerBox select, #panelInnerBox button {
-    margin-bottom: 20px; }
-  #panelInnerBox p {
-    margin-bottom: 10px;
-    color: #ddd;
-    letter-spacing: 0.05em; }
+  padding: 20px 20px;
+  color: #333; }
   #panelInnerBox #chatNum {
-    margin-bottom: 20px; }
+    margin-bottom: 30px; }
   #panelInnerBox #clearBtn {
-    width: 10em; }
-  #panelInnerBox #sliderAlpha {
-    width: 100px; }
-  #panelInnerBox #sliderBorderW {
-    width: 100px; }
+    margin-bottom: 30px; }
   #panelInnerBox #colorPicker__selectSatBri {
     margin-bottom: 5px;
     line-height: 0; }
   #panelInnerBox #colorPicker__selectHue {
     line-height: 0; }
+  #panelInnerBox .mdl-button {
+    margin-bottom: 20px;
+    height: 26px;
+    line-height: 26px;
+    font-size: 12px; }
+  #panelInnerBox .mdl-slider__container {
+    margin-bottom: 30px;
+    margin-left: -20px;
+    width: 140px; }
+  #panelInnerBox .mdl-button--accent.mdl-button--accent.mdl-button--raised {
+    color: white; }
