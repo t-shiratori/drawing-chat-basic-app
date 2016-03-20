@@ -70,7 +70,7 @@ let scketch = function(p){
     chatNum.id('chatNum');
     panelInnerBox.child(chatNum);
 
-    clearBtn = p.createButton('clear canvas');
+    clearBtn = p.createButton('clear');
     clearBtn.id('clearBtn');
     clearBtn.class('mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent');
     clearBtn.mouseClicked(clearCanvas);
@@ -109,9 +109,9 @@ let scketch = function(p){
     ------------------------------------*/
     socket = io();
 
-    //サーバーから自分のidを受け取る
-    socket.on('setYourId',function(yourId){
-      myID = yourId;
+    //接続が成功すると実行される
+    socket.on("connect", function(){
+      myID = socket.id;
     });
 
     //サーバーから、チャットルームの情報を受け取る
@@ -123,6 +123,7 @@ let scketch = function(p){
       users = {};
       for(let key in chatData.sockets) {
         if(chatData.sockets.hasOwnProperty(key)) {
+          key = key.substr(2);//サーバー側で取得するsocket.idは頭に/#が付くので取る
           users[key] = [];
         }
       }
@@ -143,7 +144,7 @@ let scketch = function(p){
     //サーバーから、更新されたユーザーのデータを受け取る
     //ストローク情報の更新
     socket.on('setClientData',function(userData){
-      users[userData.id].push(userData);//addToLinesのコメントを参照
+      users[userData.socketId].push(userData);//addToLinesのコメントを参照
       p.redraw();
     });
 
@@ -172,7 +173,7 @@ let scketch = function(p){
   p.mousePressed = function(e){
     let t = e.srcElement || e.target;//for ie
     if(t == thisRenderer2dObj.canvas){
-      socket.emit('pushUserStroke');
+      socket.emit('pushUserStroke',myID);
     }
   }
 
@@ -198,7 +199,8 @@ let scketch = function(p){
 
       //送信データをセット
       myData = {
-        clr:tempCol,
+        socketId: myID,
+        clr: tempCol,
         bdW: myBorderW,
         p: point
       };

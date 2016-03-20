@@ -24,8 +24,13 @@ div, p {
   left: 0;
   padding: 20px 20px;
   color: #333; }
+  #panelInnerBox #ttlChatNum {
+    margin-bottom: 5px; }
   #panelInnerBox #chatNum {
-    margin-bottom: 30px; }
+    margin-bottom: 30px;
+    background: #fff;
+    padding: 0 5px;
+    text-align: right; }
   #panelInnerBox #clearBtn {
     margin-bottom: 30px; }
   #panelInnerBox #colorPicker__selectSatBri {
@@ -33,6 +38,8 @@ div, p {
     line-height: 0; }
   #panelInnerBox #colorPicker__selectHue {
     line-height: 0; }
+  #panelInnerBox .selectBox {
+    background: #aaa; }
   #panelInnerBox .mdl-button {
     margin-bottom: 20px;
     height: 26px;
