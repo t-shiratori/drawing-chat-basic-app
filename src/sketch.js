@@ -149,10 +149,10 @@ let scketch = function(p){
     });
 
     //全員のキャンバスを初期化
-    socket.on('clearCanvas',function(){
-      lines = [];
-      p.clear();
-    });
+    // socket.on('clearCanvas',function(){
+    //   lines = [];
+    //   p.clear();
+    // });
 
     //ウィンドウを閉じたらサーバーに通信切断を通知する
     socket.on('disconnect',function(){
@@ -247,7 +247,9 @@ let scketch = function(p){
   }
 
   function clearCanvas(){
-    socket.emit('allClearCanvas');
+    //socket.emit('allClearCanvas');
+    lines = [];
+    p.clear();
   }
 
 

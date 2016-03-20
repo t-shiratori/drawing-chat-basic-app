@@ -47,9 +47,9 @@ io.on('connection', function (socket) {
     io.to(roomName).emit('addToLines',myID);
   });
 
-  socket.on('allClearCanvas', function(){
-    io.to(roomName).emit('clearCanvas');
-  });
+  // socket.on('allClearCanvas', function(){
+  //   io.to(roomName).emit('clearCanvas');
+  // });
 
   socket.on('disconnect', function (socket) {
     io.to(roomName).emit('chatInfoUpdate',io.sockets.adapter.rooms[roomName]);
