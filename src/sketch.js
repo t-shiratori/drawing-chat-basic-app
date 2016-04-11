@@ -119,7 +119,7 @@ let scketch = function(p){
       //チャットの人数表示
       let chatNum = document.getElementById('chatNum');
       chatNum.innerHTML = chatData.length;
-      //チャットルームメンバーのぼとのデータ管理テーブルをセット
+      //チャットルームメンバーのごとのデータ管理テーブルをセット
       users = {};
       for(let key in chatData.sockets) {
         if(chatData.sockets.hasOwnProperty(key)) {
