@@ -22,18 +22,15 @@ app.set('port', port);
 var server = http.createServer(app);
 
 
+/*
 
-/**
- * ADDED!! Require Socket.IO
- */
+ Socket.IO
+
+---------------------------------------------------------------*/
 var io = require('socket.io')(server);
 var roomName = 'room001';
 
-/**
- * ADDED!! Socket.IO Connection.
- */
 io.on('connection', function (socket) {
-  //console.log('connection');
 
   socket.join(roomName);
 
@@ -57,8 +54,15 @@ io.on('connection', function (socket) {
     //console.log(io.sockets.adapter.rooms[roomName]);
   });
 
-
 });
+
+
+
+
+
+
+
+
 
 
 
